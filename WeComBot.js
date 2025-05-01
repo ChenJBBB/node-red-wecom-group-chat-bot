@@ -1,10 +1,8 @@
 module.exports = function (RED) {
-    // 1. 引入必要的依赖
-    // 例如：const axios = require('axios');
-    // 例如：const WebSocket = require('ws');
+    // 引入必要的依赖
+    const axios = require('axios');
 
     function WeComBot(config) {
-        // 2. 创建节点实例
         RED.nodes.createNode(this, config);
         var node = this;
 
@@ -21,20 +19,23 @@ module.exports = function (RED) {
         node.mentionedList = config.mentionedList ? config.mentionedList.split(',').map(item => item.trim()) : [];
         node.mentionedMobileList = config.mentionedMobileList ? config.mentionedMobileList.split(',').map(item => item.trim()) : [];
 
-        // 打印配置参数
-        console.log('WeComBot配置参数:');
-        console.log('WebHook:', node.webhook);
-        console.log('消息类型:', node.msgType);
-        console.log('提醒成员列表:', node.mentionedList);
-        console.log('提醒成员手机号:', node.mentionedMobileList);
 
-        // 4. 节点状态管理
-        // 设置初始状态
-        // node.status({fill:"grey",shape:"dot",text:"initialized"});
-
-        // 5. 输入消息处理
+        // 节点输入消息处理
         node.on('input', function (msg) {
             // 打印输入消息
+            // 格式化成标准日期时间字符串
+            let currentDate = new Date();
+            // 获取年、月、日
+            let year = currentDate.getFullYear();
+            let month = String(currentDate.getMonth() + 1).padStart(2, '0'); // 注意月份从0开始，需要加1，并补零
+            let day = String(currentDate.getDate()).padStart(2, '0');
+
+            // 获取时、分、秒、毫秒
+            let hours = String(currentDate.getHours()).padStart(2, '0');
+            let minutes = String(currentDate.getMinutes()).padStart(2, '0');
+            let seconds = String(currentDate.getSeconds()).padStart(2, '0');
+            let milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
+            let formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
             console.log('收到输入消息:', msg);
 
             // 构建消息体
@@ -70,11 +71,22 @@ module.exports = function (RED) {
             // 打印最终发送的消息
             console.log('准备发送的消息:', message);
 
-            // TODO: 实现发送消息的逻辑
-            // 这里需要添加发送HTTP请求的代码
-
-            // 发送消息到下一个节点
-            node.send(msg);
+            // 发送消息到企业微信
+            axios.post(node.webhook, message)
+                .then(response => {
+                    console.log('消息发送成功:', response.data);
+                    // 更新节点状态
+                    node.status({ fill: "green", shape: "dot", text: formattedDateTime });
+                    // 发送消息到下一个节点
+                    node.send(msg);
+                })
+                .catch(error => {
+                    console.error('消息发送失败:', error);
+                    // 更新节点状态
+                    node.status({ fill: "red", shape: "ring", text: formattedDateTime });
+                    // 发送错误到下一个节点
+                    node.error('消息发送失败: ' + error.message, msg);
+                });
         });
 
         // 6. 节点关闭处理
@@ -106,11 +118,6 @@ module.exports = function (RED) {
         // 获取配置参数
         node.name = config.name;
         node.webhook = config.webhook;
-
-        // 打印配置参数
-        console.log('WeComBot Server 配置参数:');
-        console.log('name:', node.name);
-        console.log('WebHook:', node.webhook);
     }
 
     // 9. 注册节点

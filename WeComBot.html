@@ -3,7 +3,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('WeComBot', {
         category: 'network',  // 节点在编辑器中的分类
-        color: '#3975C6',     // 节点颜色
+        color: '#27B4F1',     // 节点颜色
         defaults: {           // 默认配置项
             name: { value: "" },
             server: { value: "", type: "WeComBot-config"},
@@ -15,7 +15,7 @@
         outputs: 1,           // 输出端口数量
         icon: "font-awesome/fa-commenting-o",  // 节点图标
         label: function () {   // 节点显示标签
-            return this.name || "企业微信机器人";
+            return this.name || "企业微信群机器人";
         }
     });
 </script>
