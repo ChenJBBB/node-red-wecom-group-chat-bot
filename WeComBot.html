@@ -1,0 +1,111 @@
+<!-- **********************WeComBot*************************** -->
+
+<script type="text/javascript">
+    RED.nodes.registerType('WeComBot', {
+        category: 'network',  // 节点在编辑器中的分类
+        color: '#3975C6',     // 节点颜色
+        defaults: {           // 默认配置项
+            name: { value: "" },
+            server: { value: "", type: "WeComBot-config"},
+            msgType: { value: "text" },
+            mentionedList: { value: "" },
+            mentionedMobileList: { value: "" }
+        },
+        inputs: 1,            // 输入端口数量
+        outputs: 1,           // 输出端口数量
+        icon: "font-awesome/fa-commenting-o",  // 节点图标
+        label: function () {   // 节点显示标签
+            return this.name || "企业微信机器人";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="WeComBot">
+    <div class="form-row">
+        <label for="node-input-name">
+            <i class="fa fa-tag" style="width: 10px"></i>
+            <span style="width: auto; margin-left: 5px; margin-right: 10px;">名称</span>
+        </label>
+        <input type="text" id="node-input-name" placeholder="节点名称">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server">
+            <i class="fa fa-cog" style="width: 10px"></i> 
+            <span style="width: auto; margin-left: 5px; margin-right: 10px;">机器人配置</span>
+        </label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-msgType">
+            <i class="fa fa-envelope" style="width: 10px"></i> 
+            <span style="width: auto; margin-left: 5px; margin-right: 10px;">消息类型</span>
+        </label>
+        <select id="node-input-msgType">
+            <option value="text">文本消息</option>
+            <option value="markdown">Markdown消息</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-mentionedList">
+            <i class="fa fa-at" style="width: 10px"></i> 
+            <span style="width: auto; margin-left: 5px; margin-right: 10px;">提醒userid</span>
+        </label>
+        <input type="text" id="node-input-mentionedList" placeholder="提醒的成员userid,多个用逗号分隔, 留空由mentioned_list 输入">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mentionedMobileList">
+            <i class="fa fa-mobile" style="width: 10px"></i> 
+            <span style="width: auto; margin-left: 5px; margin-right: 10px;">提醒手机</span>
+        </label>
+        <input type="text" id="node-input-mentionedMobileList" placeholder="提醒的成员手机号,多个用逗号分隔，留空由mentioned_mobile_list输入">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="WeComBot">
+    <p>企业微信机器人节点配置说明</p>
+    <p>配置项说明：</p>
+    <ul>
+        <li>机器人配置：选择已配置的企业微信机器人WebHook</li>
+        <li>消息类型：可选择文本消息或Markdown消息</li>
+        <li>提醒成员列表：输入要@的成员userid，多个用逗号分隔</li>
+        <li>提醒成员手机号：输入要@的成员手机号，多个用逗号分隔</li>
+    </ul>
+    <p>消息内容将通过前一个节点的msg.payload传入</p>
+    <p>如果提醒列表留空，将使用前一个节点的msg.mentioned_list和msg.mentioned_mobile_list</p>
+</script>
+
+
+<!-- **********************WeComBot-config*************************** -->
+
+<script type="text/javascript">
+    RED.nodes.registerType('WeComBot-config', {
+        category: 'config',
+        defaults: {
+            name: { value: "" },
+            webhook: { value: "", required: true }
+        },
+        label: function () {
+            return this.name || "企业微信机器人配置";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="WeComBot-config">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> 名称</label>
+        <input type="text" id="node-config-input-name" placeholder="配置名称">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-webhook"><i class="fa fa-commenting"></i> WebHook</label>
+        <input type="text" id="node-config-input-webhook" placeholder="请输入机器人WebHook">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="WeComBot-config">
+    <p>企业微信机器人配置节点</p>
+    <p>配置项说明：</p>
+    <ul>
+        <li>名称：配置节点的名称</li>
+        <li>WebHook：企业微信机器人的WebHook地址</li>
+    </ul>
+</script>

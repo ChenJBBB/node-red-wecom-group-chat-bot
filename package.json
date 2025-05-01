@@ -1,0 +1,15 @@
+{
+  "name": "node-red-wecom-group-chat-bot",
+  "version": "0.0.1",
+  "description": "Enterprise WeChat group chat WebHook robot",
+  "keywords": ["node-red"],
+  "author": "c78",
+  "license": "MIT",
+  "node-red": {
+    "nodes": {
+      "WeComBot": "WeComBot.js"
+    }
+  },
+  "dependencies": {
+  }
+}
