@@ -48,14 +48,7 @@ module.exports = function (RED) {
                 message.text = {
                     content: msg.payload
                 };
-            } else if (node.msgType === 'markdown') {
-                message.markdown = {
-                    content: msg.payload
-                };
-            }
-
-            // 设置提醒列表
-            if (node.msgType === 'text') {
+                // 设置提醒列表
                 // 如果配置中有提醒列表，使用配置的列表
                 if (node.mentionedList.length > 0 || node.mentionedMobileList.length > 0) {
                     message.text.mentioned_list = node.mentionedList;
@@ -66,6 +59,14 @@ module.exports = function (RED) {
                     message.text.mentioned_list = msg.mentioned_list || [];
                     message.text.mentioned_mobile_list = msg.mentioned_mobile_list || [];
                 }
+            } else if (node.msgType === 'markdown') {
+                message.markdown = {
+                    content: msg.payload
+                };
+            } else if (node.msgType === 'markdown_v2') {
+                message.markdown_v2 = {
+                    content: msg.payload
+                };
             }
 
             // 打印最终发送的消息
