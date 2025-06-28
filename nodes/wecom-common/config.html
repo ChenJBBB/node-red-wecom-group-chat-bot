@@ -1,0 +1,31 @@
+<script type="text/html" data-template-name="wecom-config">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> 名称</label>
+        <input type="text" id="node-config-input-name" placeholder="配置名称">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-webhook"><i class="fa fa-link"></i> WebHook</label>
+        <input type="text" id="node-config-input-webhook" placeholder="请输入机器人WebHook">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="wecom-config">
+    <p>企业微信机器人配置节点</p>
+    <ul>
+        <li>名称：配置节点的名称</li>
+        <li>WebHook：企业微信机器人的WebHook地址</li>
+    </ul>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('wecom-config', {
+        category: 'config',
+        defaults: {
+            name: { value: "" },
+            webhook: { value: "" }
+        },
+        label: function() {
+            return this.name || "企业微信配置";
+        }
+    });
+</script> 
