@@ -1,0 +1,79 @@
+<script type="text/html" data-template-name="wecom-text">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> 名称</label>
+        <input type="text" id="node-input-name" placeholder="节点名称">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-cog"></i> 机器人配置</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-msgType"><i class="fa fa-comment"></i> 消息类型</label>
+        <select id="node-input-msgType">
+            <option value="text">文本消息</option>
+            <option value="markdown">Markdown</option>
+            <option value="markdown_v2">Markdown V2</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-mentionedList"><i class="fa fa-at"></i> 提醒userid</label>
+        <input type="text" id="node-input-mentionedList" placeholder="提醒的成员userid,多个用逗号分隔, 留空由mentioned_list输入">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mentionedMobileList"><i class="fa fa-mobile"></i> 提醒手机</label>
+        <input type="text" id="node-input-mentionedMobileList" placeholder="提醒的成员手机号,多个用逗号分隔，留空由mentioned_mobile_list输入">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="wecom-text">
+    <p>企业微信文本消息节点</p>
+    <ul>
+        <li>名称：节点名称</li>
+        <li>机器人配置：选择企业微信机器人配置节点</li>
+        <li>消息类型：选择要发送的消息类型</li>
+        <li>提醒userid：要提醒的用户ID列表，用逗号分隔</li>
+        <li>提醒手机：要提醒的手机号列表，用逗号分隔</li>
+    </ul>
+    <p>消息内容将通过前一个节点的msg.payload传入</p>
+    <p>如果提醒列表留空，将使用前一个节点的msg.mentioned_list和msg.mentioned_mobile_list</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('wecom-text', {
+        category: '企业微信',
+        color: '#27B4F1',
+        defaults: {
+            name: { value: "" },
+            server: { value: "", type: "wecom-config", required: true },
+            msgType: { value: "text" },
+            mentionedList: { value: "" },
+            mentionedMobileList: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-commenting-o",
+        label: function() {
+            return this.name || "企业微信文本";
+        },
+        oneditprepare: function() {
+            // 初始化时检查消息类型
+            var msgType = $("#node-input-msgType").val();
+            if (msgType !== 'text') {
+                $("#node-input-mentionedList").closest('.form-row').hide();
+                $("#node-input-mentionedMobileList").closest('.form-row').hide();
+            }
+            
+            // 监听消息类型变化
+            $("#node-input-msgType").change(function() {
+                var selectedType = $(this).val();
+                if (selectedType === 'text') {
+                    $("#node-input-mentionedList").closest('.form-row').show();
+                    $("#node-input-mentionedMobileList").closest('.form-row').show();
+                } else {
+                    $("#node-input-mentionedList").closest('.form-row').hide();
+                    $("#node-input-mentionedMobileList").closest('.form-row').hide();
+                }
+            });
+        }
+    });
+</script> 
