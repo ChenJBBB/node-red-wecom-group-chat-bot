@@ -1,6 +1,6 @@
 {
   "name": "@c78/node-red-contrib-wecom-group-chat-bot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Enterprise WeChat group chat WebHook robot",
   "keywords": [
     "node-red",
@@ -20,12 +20,11 @@
   "node-red": {
     "nodes": {
       "wecom-config": "nodes/wecom-common/config.js",
-      "wecom-text": "nodes/wecom-text/wecom-text.js",
-      "wecom-image": "nodes/wecom-image/wecom-image.js"
+      "wecom-text": "nodes/wecom-text/wecom-text.js"
     }
   },
   "scripts": {
-    "dev": "nodemon --watch nodes --watch package.json --exec node-red"
+    "dev": "nodemon --watch nodes --watch package.json --ext js,html,json --exec node-red"
   },
   "dependencies": {
     "axios": "^1.9.0"
