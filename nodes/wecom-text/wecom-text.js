@@ -27,7 +27,7 @@ module.exports = function(RED) {
                 const timestamp = formatTimestamp();
                 let message;
                 const payload = msg.payload;
-                const msgType = msg.msgType || node.msgType;
+                const msgType = msg.msgType || node.msgType; // 获取消息类型
                 // 构建不同类型的消息体
                 if (msgType === 'text') {
                     message = api.createTextMessage(
@@ -47,7 +47,17 @@ module.exports = function(RED) {
                 node.status({ fill: "green", shape: "dot", text: timestamp });
                 node.send(msg);
             } catch (error) {
-                handleError(error, node, msg);
+                const timestamp = formatTimestamp();
+                // 将错误信息放入 payload 中
+                msg.payload = {
+                    error: true,
+                    message: error.message,
+                    originalPayload: msg.payload
+                };
+                node.error(error.message, msg);
+                node.status({ fill: "red", shape: "ring", text: timestamp });
+                // 即使出错也继续发送消息
+                node.send(msg);
             }
         });
     }
