@@ -22,7 +22,8 @@
     "nodes": {
       "wecom-config": "nodes/wecom-common/config.js",
       "wecom-text": "nodes/wecom-text/wecom-text.js",
-      "wecom-image": "nodes/wecom-image/wecom-image.js"
+      "wecom-image": "nodes/wecom-image/wecom-image.js",
+      "wecom-file-upload": "nodes/wecom-file/wecom-file.js"
     }
   },
   "engines": {
