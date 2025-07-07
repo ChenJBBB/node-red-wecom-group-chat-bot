@@ -1,6 +1,6 @@
 {
   "name": "@c78/node-red-contrib-wecom-group-chat-bot",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Enterprise WeChat group chat WebHook robot",
   "keywords": [
     "node-red",
