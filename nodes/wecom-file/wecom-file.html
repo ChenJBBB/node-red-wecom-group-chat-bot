@@ -1,0 +1,84 @@
+<script type="text/html" data-template-name="wecom-file">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> 名称</label>
+        <input type="text" id="node-input-name" placeholder="节点名称">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-cog"></i> 机器人配置</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-typeOverride"><i class="fa fa-file"></i> 类型覆盖</label>
+        <select id="node-input-typeOverride">
+            <option value="auto">自动判断</option>
+            <option value="file">文件(file)</option>
+            <option value="voice">语音(voice, 仅AMR)</option>
+        </select>
+        <span style="font-size:12px;color:#888;">如无特殊需求建议选“自动判断”</span>
+    </div>
+</script>
+
+<script type="text/markdown" data-help-name="wecom-file">
+企业微信文件上传节点（支持文件/语音amr）
+
+### 配置项
+
+- **名称**：节点名称
+- **机器人配置**：选择企业微信机器人配置节点（必须）
+- **类型覆盖**：如无特殊需求建议选“自动判断”，可强制指定类型
+
+### 输入
+
+: msg.payload (buffer) : 必须为 Buffer（建议用 file in 节点输出）
+: *msg.filename* (string) : 原始文件名，自动用于上传
+: *msg.filepath* (string) : 原始文件路径，自动用于上传
+
+### 类型判断与限制
+
+- 自动判断：.amr 为 voice，其它为 file
+- voice 类型仅支持 AMR 格式，且 ≤ 2MB
+- file 类型支持任意文件，≤ 20MB
+
+### 输出
+
+: msg.media_id (string) : 媒体文件ID（成功时）
+: msg.type (string) : 文件类型（成功时）
+: msg.created_at (number) : 创建时间戳（成功时）
+: msg.response (object) : 企业微信API响应（成功时）
+: msg.payload.error (boolean) : true 表示发生错误（失败时）
+: msg.payload.message (string) : 错误信息（失败时）
+: msg.payload.originalPayload (buffer) : 原始消息内容（失败时）
+
+### 错误处理
+
+- 输入非 Buffer、无文件名、大小超限等会报错
+- 接口返回 errcode 非0 时会报错
+- 所有错误信息写入 `msg.payload.error` 并继续输出
+
+### 注意事项
+
+- 必须用 file in 节点输出的 Buffer 作为输入
+- 机器人配置只能下拉选择，不能手动输入 key
+- 即使发送失败，节点也会继续输出消息流，错误信息会包含在 payload 中
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('wecom-file', {
+        category: '企业微信',
+        color: '#27B4F1',
+        defaults: {
+            name: { value: "" },
+            server: { value: "", type: "wecom-config", required: true },
+            typeOverride: { value: "auto" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-upload",
+        label: function() {
+            return this.name || "企业微信文件";
+        },
+        oneditprepare: function() {
+            // 仅允许下拉选择机器人配置
+        }
+    });
+</script>
