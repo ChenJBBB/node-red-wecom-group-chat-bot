@@ -25,50 +25,42 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="wecom-text">
-    <p>企业微信文本消息节点</p>
-    <ul>
-        <li><b>名称</b>：节点名称</li>
-        <li><b>机器人配置</b>：选择企业微信机器人配置节点</li>
-        <li><b>消息类型</b>：选择要发送的消息类型
-            <ul>
-                <li>文本消息：支持发送普通文本，可以@群成员</li>
-                <li>Markdown：支持发送 Markdown 格式的消息</li>
-                <li>Markdown V2：支持发送 Markdown V2 格式的消息，提供更丰富的格式选项</li>
-            </ul>
-        </li>
-        <li><b>提醒userid</b>：要提醒的用户ID列表，用逗号分隔（仅文本消息类型可用）</li>
-        <li><b>提醒手机</b>：要提醒的手机号列表，用逗号分隔（仅文本消息类型可用）</li>
-    </ul>
-    
-    <h3>输入</h3>
-    <ul>
-        <li><b>msg.payload</b>：要发送的消息内容（必需）</li>
-        <li><b>msg.msgType</b>：动态覆盖配置的消息类型（可选，支持：text、markdown、markdown_v2）</li>
-        <li><b>msg.mentioned_list</b>：动态提醒的用户ID列表（可选，仅文本消息类型有效）</li>
-        <li><b>msg.mentioned_mobile_list</b>：动态提醒的手机号列表（可选，仅文本消息类型有效）</li>
-    </ul>
-    
-    <h3>输出</h3>
-    <ul>
-        <li>成功时：输出原始消息</li>
-        <li>失败时：输出包含错误信息的消息
-            <ul>
-                <li>msg.payload.error：true 表示发生错误</li>
-                <li>msg.payload.message：错误信息</li>
-                <li>msg.payload.originalPayload：原始消息内容</li>
-            </ul>
-        </li>
-    </ul>
-    
-    <h3>注意事项</h3>
-    <ul>
-        <li>提醒功能（@群成员）仅在文本消息类型下可用</li>
-        <li>Markdown 和 Markdown V2 类型不支持提醒功能</li>
-        <li>可以通过 msg.msgType 动态覆盖配置的消息类型</li>
-        <li>如果提醒列表留空，将使用前一个节点的 msg.mentioned_list 和 msg.mentioned_mobile_list</li>
-        <li>即使发送失败，节点也会继续输出消息流，错误信息会包含在 payload 中</li>
-    </ul>
+<script type="text/markdown" data-help-name="wecom-text">
+企业微信文本消息节点
+
+### 配置项
+
+- **名称**：节点名称
+- **机器人配置**：选择企业微信机器人配置节点
+- **消息类型**：选择要发送的消息类型
+  - 文本消息：支持发送普通文本，可以@群成员
+  - Markdown：支持发送 Markdown 格式的消息，支持在 content 中使用 `<@userid>` 扩展语法来@群成员
+  - Markdown V2：支持发送 Markdown V2 格式的消息，提供更丰富的格式选项（不支持@群成员功能）
+- **提醒userid**：要提醒的用户ID列表，用逗号分隔（仅文本消息类型可用）
+- **提醒手机**：要提醒的手机号列表，用逗号分隔（仅文本消息类型可用）
+
+### 输入
+
+: msg.payload (string) : 要发送的消息内容（必需）
+: *msg.msgType* (string) : 动态覆盖配置的消息类型（可选，支持：text、markdown、markdown_v2）
+: *msg.mentioned_list* (array) : 动态提醒的用户ID列表（可选，仅文本消息类型有效）
+: *msg.mentioned_mobile_list* (array) : 动态提醒的手机号列表（可选，仅文本消息类型有效）
+
+### 输出
+
+: msg.payload (object) : 成功时输出原始消息，失败时包含错误信息
+: msg.payload.error (boolean) : true 表示发生错误
+: msg.payload.message (string) : 错误信息
+: msg.payload.originalPayload (string) : 原始消息内容
+
+### 注意事项
+
+- 提醒功能（@群成员）在文本消息类型下通过配置的提醒列表实现
+- Markdown 类型支持在 content 中使用 `<@userid>` 扩展语法来@群成员
+- Markdown V2 类型不支持@群成员功能
+- 可以通过 `msg.msgType` 动态覆盖配置的消息类型
+- 如果提醒列表留空，将使用前一个节点的 `msg.mentioned_list` 和 `msg.mentioned_mobile_list`
+- 即使发送失败，节点也会继续输出消息流，错误信息会包含在 payload 中
 </script>
 
 <script type="text/javascript">

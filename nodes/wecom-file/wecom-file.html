@@ -18,41 +18,48 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="wecom-file">
-    <p>企业微信文件上传节点（支持文件/语音amr）</p>
-    <ul>
-        <li><b>名称</b>：节点名称</li>
-        <li><b>机器人配置</b>：选择企业微信机器人配置节点（必须）</li>
-        <li><b>类型覆盖</b>：如无特殊需求建议选“自动判断”，可强制指定类型</li>
-    </ul>
-    <h3>输入要求</h3>
-    <ul>
-        <li><b>msg.payload</b>：必须为 Buffer（建议用 file in 节点输出）</li>
-        <li><b>msg.filename</b> 或 <b>msg.filepath</b>：原始文件名，自动用于上传</li>
-    </ul>
-    <h3>类型判断与限制</h3>
-    <ul>
-        <li>自动判断：.amr 为 voice，其它为 file</li>
-        <li>voice 类型仅支持 AMR 格式，且 ≤ 2MB</li>
-        <li>file 类型支持任意文件，≤ 20MB</li>
-    </ul>
-    <h3>输出</h3>
-    <ul>
-        <li>成功时：<b>msg.media_id</b>、<b>msg.type</b>、<b>msg.created_at</b>、<b>msg.response</b></li>
-        <li>失败时：<b>msg.payload.error</b>、<b>msg.payload.message</b>、<b>msg.payload.originalPayload</b></li>
-    </ul>
-    <h3>错误处理</h3>
-    <ul>
-        <li>输入非 Buffer、无文件名、大小超限等会报错</li>
-        <li>接口返回 errcode 非0 时会报错</li>
-        <li>所有错误信息写入 <b>msg.payload.error</b> 并继续输出</li>
-    </ul>
-    <h3>注意事项</h3>
-    <ul>
-        <li>必须用 file in 节点输出的 Buffer 作为输入</li>
-        <li>机器人配置只能下拉选择，不能手动输入 key</li>
-        <li>即使发送失败，节点也会继续输出消息流，错误信息会包含在 payload 中</li>
-    </ul>
+<script type="text/markdown" data-help-name="wecom-file">
+企业微信文件上传节点（支持文件/语音amr）
+
+### 配置项
+
+- **名称**：节点名称
+- **机器人配置**：选择企业微信机器人配置节点（必须）
+- **类型覆盖**：如无特殊需求建议选“自动判断”，可强制指定类型
+
+### 输入
+
+: msg.payload (buffer) : 必须为 Buffer（建议用 file in 节点输出）
+: *msg.filename* (string) : 原始文件名，自动用于上传
+: *msg.filepath* (string) : 原始文件路径，自动用于上传
+
+### 类型判断与限制
+
+- 自动判断：.amr 为 voice，其它为 file
+- voice 类型仅支持 AMR 格式，且 ≤ 2MB
+- file 类型支持任意文件，≤ 20MB
+
+### 输出
+
+: msg.media_id (string) : 媒体文件ID（成功时）
+: msg.type (string) : 文件类型（成功时）
+: msg.created_at (number) : 创建时间戳（成功时）
+: msg.response (object) : 企业微信API响应（成功时）
+: msg.payload.error (boolean) : true 表示发生错误（失败时）
+: msg.payload.message (string) : 错误信息（失败时）
+: msg.payload.originalPayload (buffer) : 原始消息内容（失败时）
+
+### 错误处理
+
+- 输入非 Buffer、无文件名、大小超限等会报错
+- 接口返回 errcode 非0 时会报错
+- 所有错误信息写入 `msg.payload.error` 并继续输出
+
+### 注意事项
+
+- 必须用 file in 节点输出的 Buffer 作为输入
+- 机器人配置只能下拉选择，不能手动输入 key
+- 即使发送失败，节点也会继续输出消息流，错误信息会包含在 payload 中
 </script>
 
 <script type="text/javascript">
